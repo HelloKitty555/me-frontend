@@ -1,53 +1,45 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import index from '../views/index'
-import blog from '../views/index/subViews/blog/blog.vue'
-import introduction from '../views/index/subViews/introduction/introduction.vue'
-import photography from '../views/index/subViews/photography/photography.vue'
-import lifestyle from '../views/index/subViews/lifestyle/lifestyle.vue'
-import articleDetail from '../views/index/subViews/articleDetail/articleDetail.vue'
-// import about from '../views/index/subViews/about/about.vue'
 
 Vue.use(Router)
-
+// 使用函数引入，可以对组件进行按需加载，提升首页加载性能
 export default new Router({
   routes: [
     {
       path: '/',
       name: 'index',
-      component: index,
+      component: () => import('../views/index'),
       children: [
         {
           path: '',
-          name: 'introduction',
-          component: introduction
+          redirect: 'about'
         },
         {
           path: 'blog',
           name: 'blog',
-          component: blog
+          component: () => import('../views/index/subViews/blog/blog')
         },
         {
           path: 'photography',
           name: 'photography',
-          component: photography
+          component: () => import('../views/index/subViews/photography/photography')
         },
         {
           path: 'lifestyle',
           name: 'lifestyle',
-          component: lifestyle
+          component: () => import('../views/index/subViews/lifestyle/lifestyle')
         },
         {
           path: 'about',
           name: 'about',
-          component: introduction
-        },
-        {
-          path: 'articleDetail/:id',
-          name: 'articleDetail',
-          component: articleDetail
+          component: () => import('../views/index/subViews/introduction/introduction')
         }
       ]
+    },
+    {
+      path: '/articleDetail/:id',
+      name: 'articleDetail',
+      component: () => import('../views/articleDetail/articleDetail')
     }
   ]
 })

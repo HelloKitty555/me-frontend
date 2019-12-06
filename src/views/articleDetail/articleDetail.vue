@@ -13,26 +13,26 @@
     </div>
     <div class="articleDetail-content"
          v-html="articleInfo.content"></div>
-    <div class="articleDetail-comment">
+    <div class="articleDetail-comment" v-if="openComment">
       <div class="create_comment">
         <div class="name"><input type="text"
                  v-model="comment.commenter_name"
-                 placeholder="留言昵称"></div>
+                 placeholder="昵称"></div>
         <div class="content"><textarea name=""
                     @focus="handleTextareaFocus"
                     id=""
                     :rows="activeComment ? 6 : 1"
-                    placeholder="我要留言"
+                    placeholder="留言内容"
                     v-model="comment.comment_content"></textarea></div>
         <div class="action"
              v-if="activeComment">
           <button @click="cancelComment"
                   class="cancel-button">取消</button>
-          <button @click="createComment"
+          <button @click="createComment" :disabled="!comment.commenter_name || !comment.comment_content"
                   class="publish-button">发表</button>
         </div>
       </div>
-      <div class="comment-title">全部评论（{{totalComments}}）：</div>
+      <div class="comment-title">全部留言（{{totalComments}}）：</div>
       <div class="comment-list">
         <transition-group name="comment-list"
                           tag="div">
@@ -65,11 +65,20 @@
     opacity: 0;
   }
 .articleDetail-container {
+  width: 50%;
+  margin:60px auto;
   .articleDetail-header {
     padding-bottom: 35px;
+    overflow: hidden;
     .title {
-      font-size: 20px;
+      font-size: 36px;
       margin-bottom: 10px;
+    }
+    @media screen and (max-width: 800px) {
+     .title {
+        font-size: 28px;
+        margin-bottom: 20px;
+     }
     }
     .summary {
       font-size: 12px;
@@ -153,6 +162,13 @@
     }
   }
 }
+ @media screen and (max-width: 800px) {
+   .articleDetail-container {
+     width:unset;
+     margin: 60px 20px;
+     overflow: hidden;
+   }
+ }
 </style>
 
 <script>
@@ -161,6 +177,7 @@ export default {
   name: 'articleDetail',
   data() {
     return {
+      openComment: true,
       isFetching: true,
       activeComment: false,
       articleInfo: {},

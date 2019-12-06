@@ -1,5 +1,5 @@
 <template>
-  <div class="blog-container">
+  <div class="container">
     <transition-group name="article-list"
                       tag="div">
       <div class="article-item"
@@ -9,6 +9,9 @@
         <articleListItem :articleInfo="item"></articleListItem>
       </div>
     </transition-group>
+ <div class="loadMore">
+      <div class="box" @click="loadMore"><loadMore :hasMoreData="hasMoreData" :isFetching="isFetching"/></div>
+    </div>
   </div>
 </template>
 
@@ -22,35 +25,60 @@
   opacity: 0;
   transform: translateY(30px);
 }
+.loadMore {
+  text-align: center;
+  .box {
+    display: inline-block;
+  }
+}
 </style>
 
 <script>
 import articleListItem from '../articleListItem/articleListItem'
+import loadMore from '../../../../components/loadMore'
 export default {
   data() {
     return {
-      articleList: []
+       articleList: [],
+      isFetching: false,
+      limit: 20,
+      hasMoreData: false
     }
   },
   mounted() {
-    this.listArticles()
+    this.init()
   },
   methods: {
-    listArticles() {
-      this.$api.listArticles({ tabs: ['3'], desc: 'create_time' }).then((result) => {
+     // 初始化
+    init() {
+      this.listArticles({ start: 0, limit: this.limit, tabs: [3], desc: 'create_time' })
+    },
+       // 列出文章
+    listArticles(options) {
+      this.isFetching = true
+      this.$api.listArticles(options).then((result) => {
         if (result.code === 'S_OK') {
-          this.articleList = result.data
+          this.articleList = this.articleList.concat(result.data)
+          this.hasMoreData = this.articleList.length < result.total
         }
       }, (error) => {
         console.log(error)
+      }).finally(() => {
+        this.isFetching = false
       })
     },
+    // 加载更多
+    loadMore() {
+      this.hasMoreData && this.listArticles({ start: this.articleList.length, limit: this.limit, tabs: [3], desc: 'create_time' })
+    },
+    // 处理文章点击
     handleArticleClick(id) {
       this.$router.push({ name: 'articleDetail', params: { id: id } })
     }
   },
   components: {
-    articleListItem
+    articleListItem,
+    loadMore
   }
 }
 </script>

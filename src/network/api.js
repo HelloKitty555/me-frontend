@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 //axios 默认配置
-axios.defaults.baseURL = "http://localhost:8080/api"
+axios.defaults.baseURL = "/api"
 axios.defaults.headers = {
   'Accept': 'text/x-json',
   'Content-Type': 'application/json; charset=UTF-8'
