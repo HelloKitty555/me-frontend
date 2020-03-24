@@ -28,6 +28,7 @@
     <div class="content">
       <router-view></router-view>
     </div>
+    <div class="beian"><a class="beian-link" href="http://beian.miit.gov.cn" target="_blank">粤ICP备19157360号</a></div>
   </div>
 </template>
 
@@ -102,6 +103,15 @@ export default {
       padding-top: 60px;
       padding-bottom: 60px;
       overflow: hidden;
+    }
+    .beian {
+      position: fixed;
+    bottom: 10px;
+    right: 50px;
+    color: #858585;
+    .beian-link {
+      color: #858585
+    }
     }
   }
 }
